@@ -34,9 +34,6 @@ const restrictionMapSchema = new mongoose.Schema({
 
 const Family = mongoose.model('Family', familySchema);
 
-app.listen(PORT_NUMBER);
-console.log('Server listening on port', PORT_NUMBER);
-
 /*
  * A Restriction Map (RMap) contains keys representing members of a family known as "givers"
  * who will be assigned to give a gift to another person and "recipients" who will be assigned
@@ -46,6 +43,11 @@ console.log('Server listening on port', PORT_NUMBER);
  * object every time a selection is being made.
  */
 const RMap = mongoose.model('RMap', restrictionMapSchema);
+
+
+
+app.listen(PORT_NUMBER);
+console.log('Server listening on port', PORT_NUMBER);
 
 
 
@@ -65,9 +67,11 @@ app.get('/api/family/:familyName', async (req, res) => {
 
 app.post('/api/family/', async (req, res) => {
   try {
-    console.log('/api/family/');
-    console.log(req.body);
-    const family = new Family(req.body.family);
+    const family = new Family({
+      name: req.body.family.name,
+      members: [],
+      restrictions: []
+    });
     await family.save();
     res.send({ 'family': family });
   }
@@ -162,28 +166,6 @@ async function getRmapByFamilyName(familyName) {
     throw err;
   }
 }
-
-/* 
- * initRmap: creates a new RMap for the given family.
- *  arguments:
- *    familyName: the name of the family to create an RMap for.
- * 
- *  return: sends an HTTP response using the Node response object indicating the operation's success
- *  or failure.
- */
-async function initRmap(familyName) {
-  try {
-    const family = getFamilyByName(familyName);
-    let rmap = new RMap({ 'familyName': familyName });
-
-
-    await rmap.save();
-    res.status(200).send('Successfully initialized restriction map.');
-  }
-  catch (err) {
-    throw err;
-  }
-};
 
 /*
  * updateRmap: reinitizalizes the RMap for a given family, updating the listed restrictions given
