@@ -1,7 +1,8 @@
 const DB_ADDRESS = 'mongodb://localhost:27017/name-exchange'
 const mongoose = require('mongoose')
 
-const Family = require('./family')
+const FamilyDao = require('./family')
+const PersonDao = require('./person')
 const RMap = require('./rmap')
 
 const initMongoose = () => {
@@ -13,6 +14,7 @@ const initMongoose = () => {
 
 module.exports = {
   initMongoose,
-  Family,
+  FamilyDao,
+  PersonDao,
   RMap
 }

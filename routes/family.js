@@ -2,37 +2,36 @@ const express = require('express')
 const router = express.Router()
 
 const handleError = require('../helpers/handleError')
-const { Family, RMap } = require('../dao')
-const { FamilyModel, getFamilyByName } = Family
-const { updateRmap } = RMap
+const { FamilyDao } = require('../dao')
+const { FamilyModel, getFamilyByName } = FamilyDao
 
-router.get(':familyName', async (req, res) => {
+router.get('/:familyName', async (req, res) => {
   try {
-    let family = await getFamilyByName(req.params.familyName)
-    res.send({ 'family': family })
+    const family = await getFamilyByName(req.params.familyName)
+    res.send({ family: family })
   }
   catch (err) { handleError(err, res) }
 })
 
 router.post('/', async (req, res) => {
   try {
-    const family = new Family({
+    const family = new FamilyModel({
       name: req.body.family.name,
-      members: [],
-      restrictions: []
+      members: []
     })
     await family.save()
-    res.send({ 'family': family })
+    res.send({ family: family })
   }
   catch (err) { handleError(err, res) }
 })
 
-router.put(':familyName', async (req, res) => {
+router.post('/:familyName/members', async (req, res) => {
   try {
-    const familyQuery = { name: req.params.familyName }
-    await FamilyModel.updateOne(familyQuery, req.body.family)
-    updateRmap(req.params.familyName)
-    res.status(200).send('Successfully updated', req.body.family.name, 'family.')
+    const family = await getFamilyByName(req.params.familyName)
+    const person = req.body.person
+    family.members.push(person)
+    await family.save()
+    res.send({ family: family })
   }
   catch (err) { handleError(err, res) }
 })

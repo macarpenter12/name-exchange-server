@@ -1,7 +1,8 @@
-const { initMongoose, Family, RMap } = require('./mongoose-dao')
+const { initMongoose, FamilyModel, PersonModel, RMap } = require('./mongoose-dao')
 
 module.exports = {
   init: initMongoose,
-  Family,
+  FamilyModel,
+  PersonModel,
   RMap
 }

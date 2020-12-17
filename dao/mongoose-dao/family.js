@@ -1,15 +1,9 @@
 const mongoose = require('mongoose')
+const Person = require('./person')
 
 const familySchema = new mongoose.Schema({
   name: String,
-  members: [{
-    name: String,
-    assignment: String
-  }],
-  restrictions: [{
-    giver: String,
-    recipient: String
-  }]
+  members: [ Person ]
 })
 
 const FamilyModel = mongoose.model('Family', familySchema)
