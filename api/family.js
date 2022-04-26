@@ -1,7 +1,7 @@
 const express = require('express');
 const apiFamily = express.Router();
 
-const db = require('../util/db');
+const db = require('../db/db');
 const handleError = require('../util/handleError');
 
 
