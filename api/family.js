@@ -7,10 +7,12 @@ const handleError = require('../util/handleError');
 
 apiFamily.get('/:familyId', async (req, res) => {
     try {
-        let family = await db('family')
-            .where({ id: req.params.familyId })
+        const family = await db('family')
+            .where({ 'id': req.params.familyId })
             .first();
-        res.send(family);
+        const members = await db('person')
+            .where({ 'familyId': req.params.familyId });
+        res.send({ family,members });
     } catch (err) {
         handleError(err, res);
     }
@@ -44,18 +46,6 @@ apiFamily.put('/:familyId', async (req, res) => {
         res.send(family);
     }
     catch (err) {
-        handleError(err, res);
-    }
-});
-
-apiFamily.get('/:familyId/members', async (req, res) => {
-    try {
-        let familyMembers = await db('family')
-            .select('person.*')
-            .join('person', 'family.id', '=', 'person.familyId')
-            .where({ 'family.id': req.params.familyId });
-        res.send(familyMembers);
-    } catch (err) {
         handleError(err, res);
     }
 });
