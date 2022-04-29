@@ -18,10 +18,11 @@ apiFamily.get('/:familyId', async (req, res) => {
     }
 });
 
-apiFamily.post('/', async (req, res) => {
+apiFamily.post('/:familyId', async (req, res) => {
     try {
         const family = {
-            name: req.body.familyName
+            id: req.params.familyId,
+            name: req.body.familyName,
         };
 
         await db('family').insert(family);
