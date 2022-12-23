@@ -9,6 +9,7 @@ apiPerson.get('/:personId', async (req, res) => {
     let person = await db('person')
       .where({ id: req.params.personId })
       .first();
+      
     res.send(person);
   } catch (err) {
     handleError(err, res);
@@ -25,24 +26,7 @@ apiPerson.post('/', async (req, res) => {
 
     await db('person')
       .insert(person);
-    res.send(person);
-  } catch (err) {
-    handleError(err, res);
-  }
-});
 
-apiPerson.put('/:personId', async (req, res) => {
-  try {
-    const person = {
-      id: req.params.personId,
-      familyId: req.body.familyId,
-      name: req.body.firstName,
-    };
-
-    await db('person')
-      .where({ id: req.params.personId })
-      .first()
-      .update(person);
     res.send(person);
   } catch (err) {
     handleError(err, res);
@@ -61,5 +45,23 @@ apiPerson.delete('/:personId', async (req, res) => {
 
   res.send({ success: true });
 });
+
+// apiPerson.put('/:personId', async (req, res) => {
+//   try {
+//     const person = {
+//       id: req.params.personId,
+//       familyId: req.body.familyId,
+//       name: req.body.firstName,
+//     };
+
+//     await db('person')
+//       .where({ id: req.params.personId })
+//       .first()
+//       .update(person);
+//     res.send(person);
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// });
 
 module.exports = apiPerson;

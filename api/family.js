@@ -12,7 +12,10 @@ apiFamily.get('/:familyId', async (req, res) => {
             .first();
         const members = await db('person')
             .where({ 'familyId': req.params.familyId });
-        res.send({ family,members });
+        const restrictions = await db('restriction')
+            .where({ 'familyId': req.params.familyId });
+
+        res.send({ family, members, restrictions });
     } catch (err) {
         handleError(err, res);
     }
@@ -26,6 +29,7 @@ apiFamily.post('/:familyId', async (req, res) => {
         };
 
         await db('family').insert(family);
+        
         res.send(family);
     }
     catch (err) {
@@ -33,22 +37,22 @@ apiFamily.post('/:familyId', async (req, res) => {
     }
 });
 
-apiFamily.put('/:familyId', async (req, res) => {
-    try {
-        const family = {
-            id: req.body.familyId,
-            name: req.body.familyName,
-        };
+// apiFamily.put('/:familyId', async (req, res) => {
+//     try {
+//         const family = {
+//             id: req.body.familyId,
+//             name: req.body.familyName,
+//         };
 
-        await db('family')
-            .update(family)
-            .where({ id: req.params.familyId })
-            .first();
-        res.send(family);
-    }
-    catch (err) {
-        handleError(err, res);
-    }
-});
+//         await db('family')
+//             .update(family)
+//             .where({ id: req.params.familyId })
+//             .first();
+//         res.send(family);
+//     }
+//     catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
 module.exports = apiFamily;
