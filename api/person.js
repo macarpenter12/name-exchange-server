@@ -4,6 +4,7 @@ const apiPerson = express.Router();
 const db = require('../db/db');
 const handleError = require('../util/handleError');
 
+
 apiPerson.get('/:personId', async (req, res) => {
   try {
     let person = await db('person')
@@ -35,8 +36,12 @@ apiPerson.post('/', async (req, res) => {
 
 apiPerson.delete('/:personId', async (req, res) => {
   try {
+    await db('restriction')
+      .where({ giverId: req.params.personId })
+      .orWhere({ receiverId: req.params.personId })
+      .del();
     await db('person')
-      .where('id', req.params.personId)
+      .where({ id: req.params.personId })
       .first()
       .del();
   } catch (err) {

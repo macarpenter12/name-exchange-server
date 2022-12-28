@@ -8,10 +8,10 @@ const handleError = require('../util/handleError');
 apiFamily.get('/:familyId', async (req, res) => {
     try {
         const family = await db('family')
-            .where({ 'id': req.params.familyId })
+            .where({ id: req.params.familyId })
             .first();
         const members = await db('person')
-            .where({ 'familyId': req.params.familyId });
+            .where({ familyId: req.params.familyId });
         const restrictionsQuery = await db('restriction')
             .select(
                 'restriction.*',
