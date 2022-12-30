@@ -7,7 +7,7 @@ const db = require('../db/db');
 const handleError = require('../util/handleError');
 
 
-apiDrawNames.get('/:familyId', async (req, res) => {
+apiDrawNames.post('/:familyId', async (req, res) => {
     try {
         const allMembers = await db('person')
             .where({ familyId: req.params.familyId });
@@ -39,7 +39,7 @@ apiDrawNames.get('/:familyId', async (req, res) => {
         for (let giver of orderedGivers) {
             let receivers = members[giver];
             if (receivers.length === 0) {
-                throw `No available assignments left for ${giver}: ${JSON.stringify(solution)}`;
+                throw 'Hit a dead end. Try a few more times, or try removing restrictions to improve chances of success.';
             }
 
             // randomly assign
@@ -48,8 +48,7 @@ apiDrawNames.get('/:familyId', async (req, res) => {
 
             // remove receiver from other lists so they don't get picked again
             for (let otherGiver in members) {
-                let otherReceivers = members[otherGiver];
-                _.remove(otherReceivers, receiver);
+                _.remove(members[otherGiver], e => e === receiver);
             }
         }
 
